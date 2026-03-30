@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Unity Bookstore</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-theme="light">
+    <!-- Theme Switcher Container -->
+    <div class="theme-switcher-container">
+        <div class="theme-switcher-orb" id="theme-switcher-orb">
+            <i class="fas fa-palette"></i>
+        </div>
+        <div class="theme-options" id="theme-options">
+            <button class="theme-option" data-theme="light" title="Light Theme">
+                <i class="fas fa-sun"></i>
+                <span>Light</span>
+            </button>
+            <button class="theme-option" data-theme="dark" title="Dark Theme">
+                <i class="fas fa-moon"></i>
+                <span>Dark</span>
+            </button>
+            <button class="theme-option" data-theme="wood" title="Wood Theme">
+                <i class="fas fa-book"></i>
+                <span>Wood</span>
+            </button>
+            <button class="theme-option" data-theme="forest" title="Forest Theme">
+                <i class="fas fa-tree"></i>
+                <span>Forest</span>
+            </button>
+        </div>
+        <div class="theme-particles" id="theme-particles"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-book me-2"></i>
+                <span class="brand-text">Unity Bookstore</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="books.html">
+                            <i class="fas fa-book-open me-1"></i> Books
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cart.html">
+                            <i class="fas fa-shopping-cart"></i> Cart 
+                            <span id="cart-count" class="badge rounded-pill">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="wishlist.html">
+                            <i class="fas fa-heart"></i> Wishlist 
+                            <span id="wishlist-count" class="badge rounded-pill">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+    <span class="nav-link text-warning">
+        <i class="bi bi-wallet2"></i> Balance: ETB <span id="nav-balance">27261.23</span>
+    </span>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="history.html">
+        <i class="bi bi-clock-history"></i> My Spending
+    </a>
+</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-5 mt-5">
+        <div class="container">
+            <h1 class="mb-4" data-aos="fade-up">Your Shopping Cart</h1>
+            
+            <!-- Cart Items -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-lg mb-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="card-body p-4">
+                            <div id="cart-items-container">
+                                <!-- Cart items will be loaded via JavaScript -->
+                                <div class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Loading cart items...</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Empty Cart Message (Initially hidden) -->
+                            <div id="empty-cart-message" class="text-center py-5" style="display: none;">
+                                <i class="fas fa-shopping-cart display-1 text-muted"></i>
+                                <h3 class="mt-3">Your cart is empty</h3>
+                                <p class="text-muted">Add some books to your cart and they'll appear here.</p>
+                                <a href="books.html" class="btn btn-primary mt-3">
+                                    <i class="fas fa-book-open me-2"></i> Browse Books
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Continue Shopping -->
+                    <a href="books.html" class="btn btn-outline-primary" data-aos="fade-up" data-aos-delay="150">
+                        <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                    </a>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-lg sticky-top" style="top: 100px;" data-aos="fade-left" data-aos-delay="200">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-4">Order Summary</h5>
+                            
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal</span>
+                                <span id="cart-subtotal">ETB 0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Shipping</span>
+                                <span id="cart-shipping">ETB 0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Tax (10%)</span>
+                                <span id="cart-tax">ETB 0.00</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-4">
+                                <h5>Total</h5>
+                                <h5 id="cart-total">ETB 0.00</h5>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="confirmPurchase()">Complete Purchase</button>
+                            <p class="text-muted small text-center free-shipping-text">Free shipping on orders over <span id="free-shipping-threshold">ETB 50</span></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Delivery Info -->
+                    <div class="card border-0 shadow-lg mt-4" data-aos="fade-left" data-aos-delay="250">
+                        <div class="card-body p-4">
+                            <h6 class="card-title">
+                                <i class="fas fa-truck me-2"></i> Delivery Information
+                            </h6>
+                            <ul class="list-unstyled small">
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i> Free shipping on orders over <span id="free-shipping-threshold">ETB 50</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-clock text-info me-2"></i> 3-5 business days delivery
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-shield-alt text-primary me-2"></i> Secure checkout
+                                </li>
+                                <li>
+                                    <i class="fas fa-undo text-warning me-2"></i> 30-day return policy
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row py-5">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand mb-3">
+                        <i class="fas fa-book me-2"></i>
+                        <span class="brand-text">Unity Bookstore</span>
+                    </div>
+                    <p class="footer-description mb-4">
+                        Your trusted online bookstore for quality educational and recreational reading materials.
+                    </p>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-heading mb-3">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="books.html">Books</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading mb-3">Need Help?</h5>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Contact Support</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 mb-4">
+                    <h5 class="footer-heading mb-3">Contact Info</h5>
+                    <ul class="footer-contact">
+                        <li class="mb-3">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            Unity University, Computer Science Dept.
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-envelope me-2"></i>
+                            info@unitybookstore.com
+                        </li>
+                        <li>
+                            <i class="fas fa-phone me-2"></i>
+                            +1 (555) 123-4567
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom py-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="mb-0">&copy; 2023 Unity Bookstore. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="mb-0">Ecommerce Course Project - Computer Science Department</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="btn-back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Checkout Simulation Modal -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-credit-card"></i> Complete Your Order
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Order Summary -->
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Ecommerce Project Simulation</strong>
+                        <p class="mb-0">This is a simulated checkout for academic purposes. Fill out the form below to complete your order simulation.</p>
+                    </div>
+                    <div class="alert alert-info mt-3">
+    <strong>Unity Bank Balance:</strong> ETB <span id="display-user-balance">0.00</span>
+</div>
+                    
+                    <!-- Embedded Google Form -->
+                    <div class="mt-4">
+                        <h6 class="mb-3">Order Simulation Form</h6>
+                        
+                        <!-- Form Container -->
+                        <div class="form-container" style="height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px;">
+                            <!-- Replace with your Google Form embed code -->
+                            <iframe 
+                                src="https://docs.google.com/forms/d/e/1FAIpQLSdyFGLTVZA2P2xfiPtDo9xPdkt4syfgXrn3u5j0tTQPteal2w/viewform?embedded=true" 
+                                width="100%" 
+                                height="500" 
+                                frameborder="0" 
+                                marginheight="0" 
+                                marginwidth="0">
+                                Loading…
+                            </iframe>
+                        </div>
+                        
+                        <!-- Instructions -->
+                        <div class="mt-3">
+                            <details>
+                                <summary class="text-primary small">
+                                    <i class="bi bi-gear"></i> How to connect real Google Form
+                                </summary>
+                                <div class="small text-muted mt-2">
+                                    <ol class="mb-2">
+                                        <li>Create a Google Form with fields for: Name, Student ID, Books, Total</li>
+                                        <li>Click "Send" → Click the embed icon <code>&lt;/&gt;</code></li>
+                                        <li>Copy the iframe code</li>
+                                        <li>Replace the example form above with your iframe code</li>
+                                    </ol>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="copyOrderDetails()">
+                        <i class="bi bi-clipboard"></i> Copy Order Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom JavaScript (This contains the books array) -->
+    <script src="js/script.js"></script>
+    <script src="js/theme.js"></script>
+    
+    <!-- Cart Page JavaScript -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // First, check if books array is available from script.js
+            if (typeof books === 'undefined' || !Array.isArray(books)) {
+                console.error('Books array not found. Please make sure script.js is loaded correctly.');
+                document.getElementById('cart-items-container').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error loading books. Please refresh the page.
+                    </div>
+                `;
+                return;
+            }
+            
+            loadCartItems();
+            updateCartCount();
+            
+            // Check if wishlist count function exists
+            if (typeof updateWishlistCount === 'function') {
+                updateWishlistCount();
+            }
+            
+            // Back to top button
+            const backToTopBtn = document.querySelector('.btn-back-to-top');
+            if (backToTopBtn) {
+                window.addEventListener('scroll', () => {
+                    if (window.pageYOffset > 300) {
+                        backToTopBtn.classList.add('show');
+                    } else {
+                        backToTopBtn.classList.remove('show');
+                    }
+                });
+                
+                backToTopBtn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        });
+        
+        function loadCartItems() {
+            // Get cart from localStorage
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const container = document.getElementById('cart-items-container');
+            const emptyMessage = document.getElementById('empty-cart-message');
+            
+            if (cart.length === 0) {
+                container.style.display = 'none';
+                emptyMessage.style.display = 'block';
+                updateOrderSummary([]);
+                return;
+            }
+            
+            // Fix: Check if books is defined and is an array
+            if (typeof books === 'undefined' || !Array.isArray(books)) {
+                console.error('Books array is not defined');
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Books data not loaded. Please refresh the page.
+                    </div>
+                `;
+                return;
+            }
+            
+            container.style.display = 'block';
+            emptyMessage.style.display = 'none';
+            
+            // Group items by ID to handle quantity
+            const groupedCart = {};
+            cart.forEach(item => {
+                if (!groupedCart[item.id]) {
+                    groupedCart[item.id] = { ...item, quantity: 0 };
+                }
+                groupedCart[item.id].quantity += 1;
+            });
+            
+            const cartItems = Object.values(groupedCart);
+            
+            container.innerHTML = cartItems.map(item => {
+                const book = books.find(b => b.id === item.id);
+                if (!book) {
+                    return `
+                        <div class="alert alert-warning">
+                            Book not found (ID: ${item.id})
+                        </div>
+                    `;
+                }
+                
+                const itemTotal = book.price * item.quantity;
+                
+                return `
+                    <div class="cart-item mb-4 pb-4 border-bottom">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="images/books/${book.image}" 
+                                     class="img-fluid rounded border" 
+                                     alt="${book.title}"
+                                     onerror="this.src='https://via.placeholder.com/100x150?text=${encodeURIComponent(book.title.substring(0, 20))}'">
+                            </div>
+                            <div class="col-md-5">
+                                <h6 class="mb-1">${book.title}</h6>
+                                <p class="text-muted small mb-1">${book.author}</p>
+                                <p class="text-muted small">Category: ${book.category.charAt(0).toUpperCase() + book.category.slice(1)}</p>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="input-group input-group-sm">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(${book.id}, -1)">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="text" class="form-control text-center" value="${item.quantity}" readonly>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(${book.id}, 1)">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <h6 class="text-primary">ETB ${itemTotal.toFixed(2)}</h6>
+                                <p class="text-muted small">ETB ${book.price.toFixed(2)} each</p>
+                            </div>
+                            <div class="col-md-1 text-end">
+                                <button class="btn btn-sm btn-outline-danger" onclick="removeFromCart(${book.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            updateOrderSummary(cartItems);
+        }
+        
+        function updateQuantity(bookId, change) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            if (change > 0) {
+                // Add item
+                cart.push({ id: bookId });
+            } else {
+                // Remove one instance
+                const index = cart.findIndex(item => item.id === bookId);
+                if (index > -1) {
+                    cart.splice(index, 1);
+                }
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCartItems();
+            updateCartCount();
+        }
+        
+        function removeFromCart(bookId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.id !== bookId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCartItems();
+            updateCartCount();
+        }
+        
+        function updateOrderSummary(cartItems) {
+            let subtotal = 0;
+            
+            // Make sure books array exists
+            if (typeof books === 'undefined' || !Array.isArray(books)) {
+                console.error('Books array not available for order summary');
+                return;
+            }
+            
+            cartItems.forEach(item => {
+                const book = books.find(b => b.id === item.id);
+                if (book) {
+                    subtotal += book.price * item.quantity;
+                }
+            });
+            
+            const freeShippingThreshold = parseFloat(localStorage.getItem('free_shipping_threshold')) || 2726.12;
+            const shippingCost = parseFloat(localStorage.getItem('shipping_cost')) || 326.59;
+            const shipping = subtotal > freeShippingThreshold || subtotal === 0 ? 0 : shippingCost;
+            const tax = subtotal * 0.10;
+            const total = subtotal + shipping + tax;
+            
+            document.getElementById('cart-subtotal').textContent = `ETB ${subtotal.toFixed(2)}`;
+            document.getElementById('cart-shipping').textContent = shipping === 0 ? 'FREE' : `ETB ${shipping.toFixed(2)}`;
+            document.getElementById('cart-tax').textContent = `ETB ${tax.toFixed(2)}`;
+            document.getElementById('cart-total').textContent = `ETB ${total.toFixed(2)}`;
+        }
+        
+        function proceedToCheckout() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            if (cart.length === 0) {
+                alert('Your cart is empty. Add some books before checking out.');
+                return;
+            }
+            
+            // Prepare order details for copying
+            prepareOrderDetailsForCopy();
+            
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+            modal.show();
+        }
+        
+        function prepareOrderDetailsForCopy() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const groupedCart = {};
+            
+            cart.forEach(item => {
+                if (!groupedCart[item.id]) {
+                    groupedCart[item.id] = { ...item, quantity: 0 };
+                }
+                groupedCart[item.id].quantity += 1;
+            });
+            
+            const cartItems = Object.values(groupedCart);
+            let booksListText = '';
+            let subtotal = 0;
+            
+            // Make sure books array is available
+            if (typeof books === 'undefined' || !Array.isArray(books)) {
+                console.error('Books array not available');
+                return;
+            }
+            
+            cartItems.forEach(item => {
+                const book = books.find(b => b.id === item.id);
+                if (book) {
+                    const itemTotal = book.price * item.quantity;
+                    subtotal += itemTotal;
+                    booksListText += `${book.title} (Qty: ${item.quantity}) - ETB ${itemTotal.toFixed(2)}\n`; 
+                }
+            });
+            
+            const freeShippingThreshold = parseFloat(localStorage.getItem('free_shipping_threshold')) || 2726.12;
+            const shippingCost = parseFloat(localStorage.getItem('shipping_cost')) || 326.59;
+            const shipping = subtotal > freeShippingThreshold || subtotal === 0 ? 0 : shippingCost;
+            const tax = subtotal * 0.10;
+            const total = subtotal + shipping + tax;
+            
+            window.orderDetailsForCopy = {
+                booksList: booksListText,
+                subtotal: subtotal.toFixed(2),
+                shipping: shipping.toFixed(2),
+                tax: tax.toFixed(2),
+                total: total.toFixed(2),
+                date: new Date().toLocaleDateString()
+            };
+        }
+        
+        function copyOrderDetails() {
+            if (!window.orderDetailsForCopy) {
+                alert('No order details available. Add items to cart first.');
+                return;
+            }
+            
+            const details = window.orderDetailsForCopy;
+            const textToCopy = `
+Order Details - Unity Bookstore
+===============================
+Date: ${details.date}
+
+Books Ordered:
+${details.booksList}
+------------------------------
+Subtotal: ETB ${details.subtotal}
+Shipping: ETB ${details.shipping}
+Tax: ETB ${details.tax}
+------------------------------
+TOTAL: ETB ${details.total}
+===============================
+This is a simulation for Ecommerce Course Project
+Unity University - Computer Science Department
+`;
+            
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    // Show confirmation
+                    const button = document.querySelector('[onclick="copyOrderDetails()"]');
+                    const originalHTML = button.innerHTML;
+                    button.innerHTML = '<i class="bi bi-check-circle"></i> Copied!';
+                    button.classList.remove('btn-primary');
+                    button.classList.add('btn-success');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalHTML;
+                        button.classList.remove('btn-success');
+                        button.classList.add('btn-primary');
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert('Failed to copy to clipboard. Please copy manually.');
+                });
+        }
+        
+        // Make sure updateCartCount is available (it's in script.js, but just in case)
+        if (typeof updateCartCount === 'undefined') {
+            window.updateCartCount = function() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = cart.length;
+                }
+            };
+        }
+    </script>
+</body>
+</html>
